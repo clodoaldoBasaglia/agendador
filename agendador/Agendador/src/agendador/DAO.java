@@ -5,10 +5,10 @@
  */
 package agendador;
 
-import java.sql.Time;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  *
@@ -62,4 +62,11 @@ public class DAO<T> {
         em.close();
     }
 
+    public List<T> listar() {
+        Query query
+                = em.createNamedQuery("SELECT u FROM Usuario u;");
+//                = em.createNamedQuery("Usuario.findAll", Usuario.class);
+        List<T> results = (List<T>) query.getResultList();
+        return results;
+    }
 }

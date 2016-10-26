@@ -5,11 +5,23 @@
  */
 package Telas;
 
+import agendador.DAO;
+import agendador.Usuario;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author clodoaldo
  */
 public class CadastroUsuarioFrame extends javax.swing.JFrame {
+
+    boolean emailValido = false;
+    boolean senhaValida = false;
+    boolean loginValido = false;
 
     /**
      * Creates new form CadastroUsuarioFrame
@@ -66,6 +78,12 @@ public class CadastroUsuarioFrame extends javax.swing.JFrame {
         jPasswordField2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jPasswordField2FocusLost(evt);
+            }
+        });
+
+        jTextField4.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField4FocusLost(evt);
             }
         });
 
@@ -151,16 +169,24 @@ public class CadastroUsuarioFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        if (validar()) {
+            cadastrar();
+        } else {
+            JOptionPane.showInternalMessageDialog(this, "CAMPOS INVALIDOS");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jPasswordField2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPasswordField2FocusLost
-        System.out.println("perdeu foco");
+        validaSenhas();
     }//GEN-LAST:event_jPasswordField2FocusLost
 
     private void jTextField3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField3FocusLost
         validaEmail();
     }//GEN-LAST:event_jTextField3FocusLost
+
+    private void jTextField4FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField4FocusLost
+        validarLogin();
+    }//GEN-LAST:event_jTextField4FocusLost
 
     /**
      * @param args the command line arguments
@@ -216,6 +242,66 @@ public class CadastroUsuarioFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void validaEmail() {
-        System.out.println("email");
+        String text = jTextField3.getText();
+        if (text.contains("@") || text.contains(".com")) {
+            emailValido = true;
+        }
+    }
+
+    private boolean validar() {
+
+        boolean validar = false;
+        if (!jTextField1.getText().isEmpty()) {
+            validar = true;
+        }
+        if (!jTextField2.getText().isEmpty()) {
+            validar = true;
+        }
+
+        if (loginValido || !jTextField1.getText().isEmpty()) {
+            validar = true;
+        }
+
+        if (emailValido) {
+            validar = true;
+        }
+        if (senhaValida) {
+            validar = true;
+        }
+        return validar;
+    }
+
+    private void cadastrar() {
+        String nome = jTextField1.getText();
+        String telefone = jTextField2.getText();
+        String email = jTextField3.getText();
+        String login = jTextField4.getText();
+        String senha = String.valueOf(jPasswordField2.getPassword());
+        Date data = new Date(new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
+        Usuario u = new Usuario();
+        u.setNomeUsuario(nome);
+        u.setEmail(email);
+        u.setTelefone(telefone);
+        u.setLogin(login);
+        u.setSenha(senha);
+        u.setDataCriacao(data);
+        new DAO<Usuario>(Usuario.class).insert(u);
+
+    }
+
+    private void validaSenhas() {
+        if (jPasswordField1.getPassword().equals(jPasswordField2.getPassword())) {
+            senhaValida = true;
+        }
+    }
+
+    private void validarLogin() {
+        List<Usuario> list = new DAO<Usuario>(Usuario.class).listar();
+        for (Usuario u : list) {
+            if (!u.getLogin().equalsIgnoreCase(jTextField4.getText())) {
+                loginValido = true;
+            }
+        }
+
     }
 }
