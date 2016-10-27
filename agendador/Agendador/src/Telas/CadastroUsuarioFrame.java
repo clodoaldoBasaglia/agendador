@@ -172,7 +172,7 @@ public class CadastroUsuarioFrame extends javax.swing.JFrame {
         if (validar()) {
             cadastrar();
         } else {
-            JOptionPane.showInternalMessageDialog(this, "CAMPOS INVALIDOS");
+            JOptionPane.showMessageDialog(null, "CAMPOS INVALIDOS");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
