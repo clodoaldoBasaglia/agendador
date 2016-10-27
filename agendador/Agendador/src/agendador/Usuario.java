@@ -8,10 +8,12 @@ package agendador;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +21,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Persistence;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -69,6 +72,9 @@ public class Usuario implements Serializable {
     private Collection<Tarefa> tarefaCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<Log> logCollection;
+
+    private static EntityManager em
+            = Persistence.createEntityManagerFactory("AgendadorPU").createEntityManager();
 
     public Usuario() {
     }
@@ -182,5 +188,10 @@ public class Usuario implements Serializable {
     public String toString() {
         return "agendador.Usuario[ idusuario=" + idusuario + " ]";
     }
-    
+
+    public List<Usuario> listaUsuarios() {
+        List resultado = em.createQuery("Usuario.findAll").getResultList();
+        return resultado;
+    }
+
 }

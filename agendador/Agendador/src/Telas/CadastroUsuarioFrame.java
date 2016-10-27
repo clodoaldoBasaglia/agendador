@@ -296,12 +296,9 @@ public class CadastroUsuarioFrame extends javax.swing.JFrame {
     }
 
     private void validarLogin() {
-        List<Usuario> list = new DAO<Usuario>(Usuario.class).listar();
-        for (Usuario u : list) {
-            if (!u.getLogin().equalsIgnoreCase(jTextField4.getText())) {
-                loginValido = true;
-            }
-        }
+        Usuario u = new Usuario();
+        List<Usuario> listaUsuarios = u.listaUsuarios();
+        System.out.println(listaUsuarios.size());
 
     }
 }
